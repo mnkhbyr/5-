@@ -1,0 +1,260 @@
+/* Modern Soft Light Palette (Default) */
+:root[data-theme="light"] {
+    --bg-color: #f2f2f7;           /* iOS soft grey background */
+    --card-bg: #ffffff;            /* Clean white cards */
+    --card-border: #e5e5ea;        /* Soft border */
+    --card-hover: #eef2f6;         /* Soft hover highlight */
+    --text-primary: #1c1c1e;      /* Deep neutral text (not pure black) */
+    --text-muted: #8e8e93;        /* Muted grey */
+    --pinyin-color: #4f46e5;      /* Crisp indigo */
+    --mongolian-color: #0284c7;   /* Vibrant soft blue */
+    --accent-btn: #e5e5ea;        /* Neutral button background */
+    --accent-btn-hover: #d1d1d6;  /* Button hover state */
+    --glass-bg: rgba(255, 255, 255, 0.88); /* Translucent navigation bar */
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* Optional Dark Theme (Secondary) */
+:root[data-theme="dark"] {
+    --bg-color: #1c1c1e;
+    --card-bg: #2c2c2e;
+    --card-border: #3a3a3c;
+    --card-hover: #3a3a3c;
+    --text-primary: #f2f2f7;
+    --text-muted: #8e8e93;
+    --pinyin-color: #818cf8;
+    --mongolian-color: #38bdf8;
+    --accent-btn: #3a3a3c;
+    --accent-btn-hover: #48484a;
+    --glass-bg: rgba(44, 44, 46, 0.88);
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    transition: background-color 0.25s ease;
+    min-height: 100vh;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(90px, calc(env(safe-area-inset-bottom) + 80px));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.app-header h1 {
+    font-size: 1.35rem;
+    margin: 0 0 2px 0;
+}
+
+.batch-counter {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+@media (min-width: 600px) {
+    .header-actions {
+        width: auto;
+    }
+}
+
+.search-input {
+    flex: 1;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    outline: none;
+    min-width: 0;
+    box-shadow: var(--shadow);
+}
+
+.page-select {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+}
+
+.theme-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    min-width: 44px;
+    min-height: 44px;
+    box-shadow: var(--shadow);
+}
+
+.theme-btn:active, .nav-btn:active {
+    transform: scale(0.96);
+}
+
+/* 2-Column Grid for Phone */
+.vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+@media (min-width: 500px) {
+    .vocab-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 14px;
+    }
+}
+
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+    user-select: none;
+    min-height: 95px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card:active {
+    transform: scale(0.95);
+    background-color: var(--card-hover);
+}
+
+.hanzi {
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+.card-details {
+    display: none;
+    margin-top: 8px;
+    width: 100%;
+    animation: fadeIn 0.2s ease forwards;
+    border-top: 1px dashed var(--card-border);
+    padding-top: 8px;
+}
+
+.card.revealed .card-details {
+    display: block;
+}
+
+.pinyin {
+    font-size: 0.95rem;
+    color: var(--pinyin-color);
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.english {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    margin: 0 0 2px 0;
+}
+
+.mongolian {
+    font-size: 0.8rem;
+    color: var(--mongolian-color);
+    font-style: italic;
+    margin: 0;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    color: var(--text-muted);
+    font-size: 1rem;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* Floating Bottom Thumb Navigation */
+.controls-bar {
+    position: fixed;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 500px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    z-index: 1000;
+}
+
+.nav-btn {
+    background-color: var(--accent-btn);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}

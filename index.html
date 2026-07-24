@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="mn" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HSK 5 Шинэ үг</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-info">
+                <h1>HSK 5 Шинэ үг</h1>
+                <p id="batch-counter" class="batch-counter">Ачаалж байна...</p>
+            </div>
+            
+            <div class="header-actions">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    class="search-input" 
+                    placeholder="Үг хайх..."
+                >
+
+                <select id="header-page-select" class="page-select" aria-label="Хуудас сонгох">
+                    <option value="0">Ачаалж байна...</option>
+                </select>
+
+                <button id="theme-toggle" class="theme-btn" aria-label="Сэдэв солих">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Card Grid -->
+        <main class="main-content">
+            <div id="vocab-grid" class="vocab-grid">
+                <!-- Cards injected dynamically -->
+            </div>
+        </main>
+
+        <!-- Sticky Floating Thumb Controls -->
+        <footer class="controls-bar">
+            <button id="prev-btn" class="nav-btn" disabled>← Өмнөх</button>
+            
+            <div class="page-jump-container">
+                <select id="footer-page-select" class="page-select" aria-label="Хуудас сонгох"></select>
+            </div>
+
+            <button id="next-btn" class="nav-btn">Дараагийнх →</button>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
