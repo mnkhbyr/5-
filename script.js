@@ -2,6 +2,13 @@ let vocabulary = [];
 let currentPage = 0;
 const ITEMS_PER_PAGE = 20;
 
+// Mode State: 'all' or 'random'
+let currentMode = 'all'; 
+let random50List = [];
+let previousRandomKey = ''; // Prevents identical random sets
+let searchQuery = '';
+let allRevealed = false;
+
 // DOM Elements
 const vocabGrid = document.getElementById('vocab-grid');
 const prevBtn = document.getElementById('prev-btn');
@@ -13,24 +20,10 @@ const themeToggleBtn = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const searchInput = document.getElementById('search-input');
 const toggleTranslationsBtn = document.getElementById('toggle-translations-btn');
-
-let searchQuery = '';
-let allRevealed = false; // Tracks global reveal/hide state for current page
-
-// Filter vocabulary array based on search query
-function getFilteredVocab() {
-    if (!searchQuery) return vocabulary;
-    return vocabulary.filter(word => {
-        const pos = word.type || word.pos || word.category || word.partOfSpeech || '';
-        return (
-            (word.hanzi && word.hanzi.toLowerCase().includes(searchQuery)) ||
-            (word.pinyin && word.pinyin.toLowerCase().includes(searchQuery)) ||
-            (word.english && word.english.toLowerCase().includes(searchQuery)) ||
-            (word.mongolian && word.mongolian.toLowerCase().includes(searchQuery)) ||
-            (pos && pos.toLowerCase().includes(searchQuery))
-        );
-    });
-}
+const shuffleBtn = document.getElementById('shuffle-btn');
+const tabAll = document.getElementById('tab-all');
+const tabRandom = document.getElementById('tab-random');
+const controlsBar = document.getElementById('controls-bar');
 
 // 1. Theme Switch Logic
 const savedTheme = localStorage.getItem('hsk5_theme') || 'light';
@@ -49,21 +42,115 @@ function updateThemeIcon(theme) {
     themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
 }
 
-// 2. Load Vocabulary
+// 2. Load Vocabulary (Safe Loader)
 fetch('vocabulary.json')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+    })
     .then(data => {
-        vocabulary = data;
+        if (Array.isArray(data)) {
+            vocabulary = data;
+        } else if (Array.isArray(data.words)) {
+            vocabulary = data.words;
+        } else {
+            vocabulary = Object.values(data).find(val => Array.isArray(val)) || [];
+        }
         populatePageDropdowns();
         renderGrid();
     })
     .catch(error => {
         console.error('Error loading vocabulary.json:', error);
-        batchCounter.textContent = 'Мэдээлэл ачаалахад алдаа гарлаа.';
+        batchCounter.textContent = 'Мэдээлэл ачаалахад алдаа гарлаа. (Check Console)';
     });
 
-// 3. Populate Page Dropdowns
+// 3. Mode Switcher (All Words vs Random 50)
+tabAll.addEventListener('click', () => {
+    if (currentMode === 'all') return;
+    currentMode = 'all';
+    tabAll.classList.add('active');
+    tabRandom.classList.remove('active');
+    
+    // UI visibility updates
+    searchInput.style.display = 'block';
+    headerPageSelect.style.display = 'block';
+    controlsBar.style.display = 'flex';
+    shuffleBtn.style.display = 'none';
+
+    currentPage = 0;
+    resetToggleState();
+    populatePageDropdowns();
+    renderGrid();
+});
+
+tabRandom.addEventListener('click', () => {
+    currentMode = 'random';
+    tabRandom.classList.add('active');
+    tabAll.classList.remove('active');
+
+    // UI visibility updates
+    searchInput.style.display = 'none';
+    headerPageSelect.style.display = 'none';
+    controlsBar.style.display = 'none'; // Hide bottom pagination bar in Random 50 mode
+    shuffleBtn.style.display = 'inline-block';
+
+    generateRandom50();
+    resetToggleState();
+    renderGrid();
+});
+
+// Fisher-Yates algorithm for guaranteed unique shuffling
+function generateRandom50() {
+    if (vocabulary.length === 0) return;
+
+    let shuffled;
+    let newKey = '';
+
+    // Loop until we get a set different from the previous one
+    do {
+        shuffled = [...vocabulary];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        random50List = shuffled.slice(0, Math.min(50, shuffled.length));
+        newKey = random50List.slice(0, 5).map(w => w.hanzi).join('');
+    } while (vocabulary.length > 50 && newKey === previousRandomKey);
+
+    previousRandomKey = newKey;
+}
+
+shuffleBtn.addEventListener('click', () => {
+    if (navigator.vibrate) navigator.vibrate(15);
+    generateRandom50();
+    resetToggleState();
+    renderGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// 4. Get Current Active Vocab List
+function getFilteredVocab() {
+    if (currentMode === 'random') {
+        return random50List;
+    }
+
+    if (!searchQuery) return vocabulary;
+    return vocabulary.filter(word => {
+        const pos = word.type || word.pos || word.category || word.partOfSpeech || '';
+        return (
+            (word.hanzi && word.hanzi.toLowerCase().includes(searchQuery)) ||
+            (word.pinyin && word.pinyin.toLowerCase().includes(searchQuery)) ||
+            (word.english && word.english.toLowerCase().includes(searchQuery)) ||
+            (word.mongolian && word.mongolian.toLowerCase().includes(searchQuery)) ||
+            (pos && pos.toLowerCase().includes(searchQuery))
+        );
+    });
+}
+
+// 5. Populate Dropdowns
 function populatePageDropdowns() {
+    if (currentMode === 'random') return;
+
     const list = getFilteredVocab();
     const totalPages = Math.ceil(list.length / ITEMS_PER_PAGE) || 1;
     headerPageSelect.innerHTML = '';
@@ -79,7 +166,7 @@ function populatePageDropdowns() {
     }
 }
 
-// 4. Render Grid
+// 6. Render Grid
 function renderGrid() {
     vocabGrid.innerHTML = '';
 
@@ -94,22 +181,33 @@ function renderGrid() {
         return;
     }
 
-    const startIndex = currentPage * ITEMS_PER_PAGE;
-    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
-    const currentBatch = list.slice(startIndex, endIndex);
+    let currentBatch;
+    let startIndex = 0;
 
-    batchCounter.textContent = searchQuery 
-        ? `Олдсон: ${totalItems} үг` 
-        : `Нийт: ${startIndex + 1}–${endIndex} / ${totalItems}`;
+    if (currentMode === 'random') {
+        currentBatch = list; // Show all 50 in random mode directly
+        batchCounter.textContent = `Random: ${currentBatch.length} үг`;
+    } else {
+        startIndex = currentPage * ITEMS_PER_PAGE;
+        const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+        currentBatch = list.slice(startIndex, endIndex);
 
-    headerPageSelect.value = currentPage;
-    footerPageSelect.value = currentPage;
+        batchCounter.textContent = searchQuery 
+            ? `Олдсон: ${totalItems} үг` 
+            : `Нийт: ${startIndex + 1}–${endIndex} / ${totalItems}`;
+
+        headerPageSelect.value = currentPage;
+        footerPageSelect.value = currentPage;
+        
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.disabled = endIndex >= totalItems;
+    }
 
     currentBatch.forEach((word, index) => {
         const card = document.createElement('div');
         card.className = allRevealed ? 'card revealed' : 'card';
 
-        const wordNumber = startIndex + index + 1;
+        const wordNumber = currentMode === 'random' ? index + 1 : startIndex + index + 1;
         const pos = word.type || word.pos || word.category || word.partOfSpeech || '';
 
         card.innerHTML = `
@@ -132,38 +230,30 @@ function renderGrid() {
 
         vocabGrid.appendChild(card);
     });
-
-    prevBtn.disabled = currentPage === 0;
-    nextBtn.disabled = endIndex >= totalItems;
 }
 
-// 5. Hide / Show All Cards Toggle
+// 7. Hide / Show All Translations Toggle
 toggleTranslationsBtn.addEventListener('click', () => {
     const cards = document.querySelectorAll('.card');
-    
-    // Check if any cards are currently revealed
     const hasRevealedCards = Array.from(cards).some(card => card.classList.contains('revealed'));
 
     if (hasRevealedCards || allRevealed) {
-        // Hide all cards
         cards.forEach(card => card.classList.remove('revealed'));
         allRevealed = false;
         toggleTranslationsBtn.textContent = '👁️ Ил гаргах';
     } else {
-        // Reveal all cards
         cards.forEach(card => card.classList.add('revealed'));
         allRevealed = true;
         toggleTranslationsBtn.textContent = '🫣 Нуух';
     }
 });
 
-// Reset reveal state on page change
 function resetToggleState() {
     allRevealed = false;
     toggleTranslationsBtn.textContent = '👁️ Ил гаргах';
 }
 
-// 6. Navigation Handlers
+// 8. Navigation Handlers
 function changePage(newPage) {
     currentPage = parseInt(newPage, 10);
     resetToggleState();
