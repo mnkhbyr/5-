@@ -1,20 +1,19 @@
-/* Modern Soft Light Palette (Default) */
+/* Color Palettes */
 :root[data-theme="light"] {
-    --bg-color: #f2f2f7;           /* iOS soft grey background */
-    --card-bg: #ffffff;            /* Clean white cards */
-    --card-border: #e5e5ea;        /* Soft border */
-    --card-hover: #eef2f6;         /* Soft hover highlight */
-    --text-primary: #1c1c1e;      /* Deep neutral text (not pure black) */
-    --text-muted: #8e8e93;        /* Muted grey */
-    --pinyin-color: #4f46e5;      /* Crisp indigo */
-    --mongolian-color: #0284c7;   /* Vibrant soft blue */
-    --accent-btn: #e5e5ea;        /* Neutral button background */
-    --accent-btn-hover: #d1d1d6;  /* Button hover state */
-    --glass-bg: rgba(255, 255, 255, 0.88); /* Translucent navigation bar */
+    --bg-color: #f2f2f7;
+    --card-bg: #ffffff;
+    --card-border: #e5e5ea;
+    --card-hover: #eef2f6;
+    --text-primary: #1c1c1e;
+    --text-muted: #8e8e93;
+    --pinyin-color: #4f46e5;
+    --mongolian-color: #0284c7;
+    --accent-btn: #e5e5ea;
+    --accent-btn-hover: #d1d1d6;
+    --glass-bg: rgba(255, 255, 255, 0.88);
     --shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
-/* Optional Dark Theme (Secondary) */
 :root[data-theme="dark"] {
     --bg-color: #1c1c1e;
     --card-bg: #2c2c2e;
@@ -98,7 +97,7 @@ body {
     border: 1px solid var(--card-border);
     padding: 10px 12px;
     border-radius: 12px;
-    font-size: 16px; /* Prevents auto-zoom on iOS */
+    font-size: 16px;
     outline: none;
     min-width: 0;
     box-shadow: var(--shadow);
@@ -127,12 +126,28 @@ body {
     min-height: 44px;
     box-shadow: var(--shadow);
 }
+.action-btn {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-height: 44px;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+}
 
+.action-btn:active {
+    transform: scale(0.96);
+}   
 .theme-btn:active, .nav-btn:active {
     transform: scale(0.96);
 }
 
-/* 2-Column Grid for Phone */
+/* Grid Layout */
 .vocab-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -146,21 +161,21 @@ body {
     }
 }
 
+/* Card Styling */
 .card {
     background-color: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 16px;
-    padding: 14px 8px;
+    padding: 10px 10px 14px 10px;
     text-align: center;
     cursor: pointer;
     box-shadow: var(--shadow);
     transition: transform 0.15s ease, background-color 0.15s ease;
     user-select: none;
-    min-height: 95px;
+    min-height: 105px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .card:active {
@@ -168,11 +183,41 @@ body {
     background-color: var(--card-hover);
 }
 
+/* Top Row (Top-Left Numbering & Top-Right POS Tag) */
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 16px;
+    margin-bottom: 2px;
+}
+
+.word-number {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.pos-tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background-color: var(--accent-btn);
+    border: 1px solid var(--card-border);
+    padding: 1px 4px;
+    border-radius: 4px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
 .hanzi {
     font-size: 2rem;
     font-weight: 500;
     color: var(--text-primary);
     line-height: 1.1;
+    margin: auto 0;
 }
 
 .card-details {
@@ -216,7 +261,7 @@ body {
     padding: 40px 0;
 }
 
-/* Floating Bottom Thumb Navigation */
+/* Floating Bottom Thumb Navigation Bar */
 .controls-bar {
     position: fixed;
     bottom: max(16px, env(safe-area-inset-bottom));
