@@ -3,22 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HSK 5 Үгсийн Сан</title>
+    <title>HSK 5 Шинэ Үг</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
-            <div>
-                <h1>HSK 5 Шинэ Үг</h1>
-                <p id="batch-counter" class="batch-counter">Ачаалж байна...</p>
+            <div class="header-top">
+                <div>
+                    <h1>HSK 5 Шинэ Үг</h1>
+                    <p id="batch-counter" class="batch-counter">Ачаалж байна...</p>
+                </div>
+                <!-- Mode Switcher Tabs -->
+                <div class="mode-tabs">
+                    <button id="tab-all" class="tab-btn active">Нийт үгс</button>
+                    <button id="tab-random" class="tab-btn">Санамсаргүй 50</button>
+                </div>
             </div>
+
             <div class="header-actions">
                 <input type="text" id="search-input" class="search-input" placeholder="Үг хайх">
                 <select id="header-page-select" class="page-select" aria-label="Хуудас сонгох"></select>
+
+                <!-- Dynamic Action Buttons -->
+                <button id="shuffle-btn" class="action-btn shuffle-btn" style="display: none;">
+                    🎲 Холих
+                </button>
                 <button id="toggle-translations-btn" class="action-btn" title="Орчуулга нуух / харуулах">
-                    🫣 Нуух
+                    👁️ Ил гаргах
                 </button>
                 <button id="theme-toggle" class="theme-btn" aria-label="Сэдэв солих">
                     <span id="theme-icon">☀️</span>
@@ -30,7 +44,7 @@
         <main id="vocab-grid" class="vocab-grid"></main>
 
         <!-- Floating Bottom Navigation -->
-        <div class="controls-bar">
+        <div id="controls-bar" class="controls-bar">
             <button id="prev-btn" class="nav-btn">← Өмнөх</button>
             <select id="footer-page-select" class="page-select" aria-label="Хуудас сонгох"></select>
             <button id="next-btn" class="nav-btn">Дараагийнх →</button>
