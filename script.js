@@ -9,8 +9,17 @@ let previousRandomKey = '';
 let searchQuery = '';
 let allRevealed = false;
 
+// Undo Toast State
+let removedStack = [];
+let undoTimeout = null;
+
 // 1. Load Saved Words from Browser LocalStorage
-let savedWords = JSON.parse(localStorage.getItem('hsk5_saved_words') || '[]');
+let savedWords = [];
+try {
+    savedWords = JSON.parse(localStorage.getItem('hsk5_saved_words')) || [];
+} catch (e) {
+    savedWords = [];
+}
 
 // DOM Elements
 const vocabGrid = document.getElementById('vocab-grid');
@@ -28,6 +37,8 @@ const tabAll = document.getElementById('tab-all');
 const tabRandom = document.getElementById('tab-random');
 const tabSaved = document.getElementById('tab-saved');
 const controlsBar = document.getElementById('controls-bar');
+const undoToast = document.getElementById('undo-toast');
+const undoBtn = document.getElementById('undo-btn');
 
 // Theme Switch Logic
 const savedTheme = localStorage.getItem('hsk5_theme') || 'light';
@@ -130,16 +141,32 @@ shuffleBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// 4. Save/Unsave Toggle Function
+// 4. Save/Unsave Toggle Function with Undo Toast Trigger
 function toggleSaveWord(hanzi) {
+    if (!hanzi) return;
+
     if (savedWords.includes(hanzi)) {
+        // Unstar word & add to undo stack
         savedWords = savedWords.filter(w => w !== hanzi);
+        removedStack.push(hanzi);
+        showUndoToast();
     } else {
+        // Re-star word & remove from undo stack if present
         savedWords.push(hanzi);
+        removedStack = removedStack.filter(w => w !== hanzi);
+        if (removedStack.length === 0) hideUndoToast();
     }
+
     localStorage.setItem('hsk5_saved_words', JSON.stringify(savedWords));
-    
-    // Re-render grid or page counts if in saved mode
+
+    if (currentMode === 'saved') {
+        const list = getFilteredVocab();
+        const totalPages = Math.ceil(list.length / ITEMS_PER_PAGE) || 1;
+        if (currentPage >= totalPages) {
+            currentPage = Math.max(0, totalPages - 1);
+        }
+    }
+
     populatePageDropdowns();
     renderGrid();
 }
@@ -170,8 +197,7 @@ function getFilteredVocab() {
     });
 }
 
-// 6. Populate Dropdowns
-// Populate Dropdowns with Alphabetical Letter Ranges
+// 6. Populate Dropdowns with Alphabetical Letter Ranges
 function populatePageDropdowns() {
     if (currentMode === 'random') return;
 
@@ -180,10 +206,8 @@ function populatePageDropdowns() {
     headerPageSelect.innerHTML = '';
     footerPageSelect.innerHTML = '';
 
-    // Helper function to extract the first standard A-Z letter from Pinyin
     function getFirstLetter(word) {
         const pinyinStr = word.pinyin || word.english || word.hanzi || '';
-        // Remove tone marks (e.g., 'á' -> 'a', 'ǐ' -> 'i')
         const cleanStr = pinyinStr.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         const match = cleanStr.match(/[a-zA-Z]/);
         return match ? match[0].toUpperCase() : '';
@@ -283,7 +307,6 @@ function renderGrid() {
             </div>
         `;
 
-        // Star button click listener (e.stopPropagation prevents the card from flipping when clicking the star)
         const starBtn = card.querySelector('.save-star-btn');
         starBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -291,7 +314,6 @@ function renderGrid() {
             toggleSaveWord(word.hanzi);
         });
 
-        // Card flip listener
         card.addEventListener('click', () => {
             if (navigator.vibrate) navigator.vibrate(10);
             card.classList.toggle('revealed');
@@ -350,3 +372,76 @@ searchInput.addEventListener('input', (e) => {
     populatePageDropdowns();
     renderGrid();
 });
+
+// ==========================================
+// 10. TOAST FUNCTIONS & BULK UNDO HANDLER
+// ==========================================
+function showUndoToast() {
+    if (!undoToast) return;
+    if (undoTimeout) clearTimeout(undoTimeout);
+
+    const toastText = undoToast.querySelector('span');
+    if (toastText) {
+        toastText.textContent = removedStack.length > 1 
+            ? `${removedStack.length} үг хасагдлаа` 
+            : 'Үг хасагдлаа';
+    }
+
+    // Dynamic button label: changes to "Undo All" if 3 or more words are queued
+    if (undoBtn) {
+        undoBtn.textContent = removedStack.length >= 3 
+            ? 'Бүгдийг буцаах ↩️' 
+            : 'Буцаах ↩️';
+    }
+
+    undoToast.classList.remove('hidden');
+
+    // Auto-hide after 5 seconds of inactivity
+    undoTimeout = setTimeout(() => {
+        hideUndoToast();
+    }, 5000);
+}
+
+function hideUndoToast() {
+    if (!undoToast) return;
+    undoToast.classList.add('hidden');
+    removedStack = []; // Clear history stack when toast hides
+}
+
+// Undo Button Handler
+if (undoBtn) {
+    undoBtn.addEventListener('click', () => {
+        if (removedStack.length === 0) return;
+
+        if (removedStack.length >= 3) {
+            // 🚀 If 3 or more words removed, restore ALL at once in one tap
+            removedStack.forEach(hanzi => {
+                if (!savedWords.includes(hanzi)) {
+                    savedWords.push(hanzi);
+                }
+            });
+            removedStack = []; // Clear queue completely
+        } else {
+            // If fewer than 3 words removed, restore one by one
+            const lastHanzi = removedStack.pop();
+            if (!savedWords.includes(lastHanzi)) {
+                savedWords.push(lastHanzi);
+            }
+        }
+
+        // Save updated array to LocalStorage
+        localStorage.setItem('hsk5_saved_words', JSON.stringify(savedWords));
+        
+        if (navigator.vibrate) navigator.vibrate(15);
+        
+        // Hide toast if queue is empty, otherwise refresh count
+        if (removedStack.length > 0) {
+            showUndoToast();
+        } else {
+            hideUndoToast();
+        }
+
+        populatePageDropdowns();
+        renderGrid();
+    });
+}
