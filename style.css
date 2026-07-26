@@ -349,3 +349,22 @@ body {
     from { opacity: 0; transform: translateY(-4px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* Star Button inside Card Top Bar */
+.save-star-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.save-star-btn.saved {
+    color: #f59e0b; /* Golden star color */
+}
+
+.save-star-btn:active {
+    transform: scale(1.3);
+}
