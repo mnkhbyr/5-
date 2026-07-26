@@ -2,12 +2,15 @@ let vocabulary = [];
 let currentPage = 0;
 const ITEMS_PER_PAGE = 20;
 
-// Mode State: 'all' or 'random'
+// Mode State: 'all', 'random', or 'saved'
 let currentMode = 'all'; 
 let random50List = [];
-let previousRandomKey = ''; // Prevents identical random sets
+let previousRandomKey = '';
 let searchQuery = '';
 let allRevealed = false;
+
+// 1. Load Saved Words from Browser LocalStorage
+let savedWords = JSON.parse(localStorage.getItem('hsk5_saved_words') || '[]');
 
 // DOM Elements
 const vocabGrid = document.getElementById('vocab-grid');
@@ -23,9 +26,10 @@ const toggleTranslationsBtn = document.getElementById('toggle-translations-btn')
 const shuffleBtn = document.getElementById('shuffle-btn');
 const tabAll = document.getElementById('tab-all');
 const tabRandom = document.getElementById('tab-random');
+const tabSaved = document.getElementById('tab-saved');
 const controlsBar = document.getElementById('controls-bar');
 
-// 1. Theme Switch Logic
+// Theme Switch Logic
 const savedTheme = localStorage.getItem('hsk5_theme') || 'light';
 document.documentElement.setAttribute('data-theme', savedTheme);
 updateThemeIcon(savedTheme);
@@ -42,7 +46,7 @@ function updateThemeIcon(theme) {
     themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
 }
 
-// 2. Load Vocabulary (Safe Loader)
+// 2. Load Vocabulary JSON
 fetch('vocabulary.json')
     .then(response => {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -61,52 +65,50 @@ fetch('vocabulary.json')
     })
     .catch(error => {
         console.error('Error loading vocabulary.json:', error);
-        batchCounter.textContent = 'Мэдээлэл ачаалахад алдаа гарлаа. (Check Console)';
+        batchCounter.textContent = 'Мэдээлэл ачаалахад алдаа гарлаа.';
     });
 
-// 3. Mode Switcher (All Words vs Random 50)
-tabAll.addEventListener('click', () => {
-    if (currentMode === 'all') return;
-    currentMode = 'all';
-    tabAll.classList.add('active');
-    tabRandom.classList.remove('active');
-    
-    // UI visibility updates
-    searchInput.style.display = 'block';
-    headerPageSelect.style.display = 'block';
-    controlsBar.style.display = 'flex';
-    shuffleBtn.style.display = 'none';
+// 3. Tab Switching Handlers
+tabAll.addEventListener('click', () => switchTab('all'));
+tabRandom.addEventListener('click', () => switchTab('random'));
+tabSaved.addEventListener('click', () => switchTab('saved'));
+
+function switchTab(mode) {
+    currentMode = mode;
+    [tabAll, tabRandom, tabSaved].forEach(tab => tab.classList.remove('active'));
+
+    if (mode === 'all') {
+        tabAll.classList.add('active');
+        searchInput.style.display = 'block';
+        headerPageSelect.style.display = 'block';
+        controlsBar.style.display = 'flex';
+        shuffleBtn.style.display = 'none';
+    } else if (mode === 'random') {
+        tabRandom.classList.add('active');
+        searchInput.style.display = 'none';
+        headerPageSelect.style.display = 'none';
+        controlsBar.style.display = 'none';
+        shuffleBtn.style.display = 'inline-block';
+        generateRandom50();
+    } else if (mode === 'saved') {
+        tabSaved.classList.add('active');
+        searchInput.style.display = 'block';
+        headerPageSelect.style.display = 'block';
+        controlsBar.style.display = 'flex';
+        shuffleBtn.style.display = 'none';
+    }
 
     currentPage = 0;
     resetToggleState();
     populatePageDropdowns();
     renderGrid();
-});
+}
 
-tabRandom.addEventListener('click', () => {
-    currentMode = 'random';
-    tabRandom.classList.add('active');
-    tabAll.classList.remove('active');
-
-    // UI visibility updates
-    searchInput.style.display = 'none';
-    headerPageSelect.style.display = 'none';
-    controlsBar.style.display = 'none'; // Hide bottom pagination bar in Random 50 mode
-    shuffleBtn.style.display = 'inline-block';
-
-    generateRandom50();
-    resetToggleState();
-    renderGrid();
-});
-
-// Fisher-Yates algorithm for guaranteed unique shuffling
+// Fisher-Yates Random 50 Generator
 function generateRandom50() {
     if (vocabulary.length === 0) return;
-
     let shuffled;
     let newKey = '';
-
-    // Loop until we get a set different from the previous one
     do {
         shuffled = [...vocabulary];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -128,14 +130,35 @@ shuffleBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// 4. Get Current Active Vocab List
+// 4. Save/Unsave Toggle Function
+function toggleSaveWord(hanzi) {
+    if (savedWords.includes(hanzi)) {
+        savedWords = savedWords.filter(w => w !== hanzi);
+    } else {
+        savedWords.push(hanzi);
+    }
+    localStorage.setItem('hsk5_saved_words', JSON.stringify(savedWords));
+    
+    // Re-render grid or page counts if in saved mode
+    populatePageDropdowns();
+    renderGrid();
+}
+
+// 5. Get Filtered Vocab List
 function getFilteredVocab() {
+    let list = vocabulary;
+
     if (currentMode === 'random') {
         return random50List;
     }
 
-    if (!searchQuery) return vocabulary;
-    return vocabulary.filter(word => {
+    if (currentMode === 'saved') {
+        list = vocabulary.filter(w => savedWords.includes(w.hanzi));
+    }
+
+    if (!searchQuery) return list;
+
+    return list.filter(word => {
         const pos = word.type || word.pos || word.category || word.partOfSpeech || '';
         return (
             (word.hanzi && word.hanzi.toLowerCase().includes(searchQuery)) ||
@@ -147,7 +170,8 @@ function getFilteredVocab() {
     });
 }
 
-// 5. Populate Dropdowns
+// 6. Populate Dropdowns
+// Populate Dropdowns with Alphabetical Letter Ranges
 function populatePageDropdowns() {
     if (currentMode === 'random') return;
 
@@ -156,17 +180,45 @@ function populatePageDropdowns() {
     headerPageSelect.innerHTML = '';
     footerPageSelect.innerHTML = '';
 
+    // Helper function to extract the first standard A-Z letter from Pinyin
+    function getFirstLetter(word) {
+        const pinyinStr = word.pinyin || word.english || word.hanzi || '';
+        // Remove tone marks (e.g., 'á' -> 'a', 'ǐ' -> 'i')
+        const cleanStr = pinyinStr.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const match = cleanStr.match(/[a-zA-Z]/);
+        return match ? match[0].toUpperCase() : '';
+    }
+
     for (let i = 0; i < totalPages; i++) {
-        const start = i * ITEMS_PER_PAGE + 1;
-        const end = Math.min((i + 1) * ITEMS_PER_PAGE, list.length);
-        const optionText = `${start}–${end}`;
+        const startIndex = i * ITEMS_PER_PAGE;
+        const endIndex = Math.min((i + 1) * ITEMS_PER_PAGE, list.length);
+        const batch = list.slice(startIndex, endIndex);
+
+        const startNum = startIndex + 1;
+        const endNum = endIndex;
+
+        let letterRange = '';
+        if (batch.length > 0) {
+            const startLetter = getFirstLetter(batch[0]);
+            const endLetter = getFirstLetter(batch[batch.length - 1]);
+
+            if (startLetter && endLetter) {
+                if (startLetter === endLetter) {
+                    letterRange = ` (${startLetter})`;
+                } else {
+                    letterRange = ` (${startLetter}–${endLetter})`;
+                }
+            }
+        }
+
+        const optionText = `${startNum}–${endNum}${letterRange}`;
         
         headerPageSelect.add(new Option(optionText, i));
         footerPageSelect.add(new Option(optionText, i));
     }
 }
 
-// 6. Render Grid
+// 7. Render Grid
 function renderGrid() {
     vocabGrid.innerHTML = '';
 
@@ -174,8 +226,11 @@ function renderGrid() {
     const totalItems = list.length;
 
     if (totalItems === 0) {
-        vocabGrid.innerHTML = '<div class="no-results">Тохирох үг олдсонгүй.</div>';
-        batchCounter.textContent = '0 үг олдлоо';
+        const emptyMsg = currentMode === 'saved' 
+            ? 'Хадгалсан үг байхгүй байна. (Үг дээрх од дээр ⭐️ дарж хадгалаарай)'
+            : 'Тохирох үг олдсонгүй.';
+        vocabGrid.innerHTML = `<div class="no-results">${emptyMsg}</div>`;
+        batchCounter.textContent = '0 үг';
         prevBtn.disabled = true;
         nextBtn.disabled = true;
         return;
@@ -185,16 +240,17 @@ function renderGrid() {
     let startIndex = 0;
 
     if (currentMode === 'random') {
-        currentBatch = list; // Show all 50 in random mode directly
-        batchCounter.textContent = `Random: ${currentBatch.length} үг`;
+        currentBatch = list;
+        batchCounter.textContent = `Санамсаргүй: ${currentBatch.length} үг`;
     } else {
         startIndex = currentPage * ITEMS_PER_PAGE;
         const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
         currentBatch = list.slice(startIndex, endIndex);
 
+        const titlePrefix = currentMode === 'saved' ? 'Хадгалсан' : 'Нийт';
         batchCounter.textContent = searchQuery 
             ? `Олдсон: ${totalItems} үг` 
-            : `Нийт: ${startIndex + 1}–${endIndex} / ${totalItems}`;
+            : `${titlePrefix}: ${startIndex + 1}–${endIndex} / ${totalItems}`;
 
         headerPageSelect.value = currentPage;
         footerPageSelect.value = currentPage;
@@ -209,10 +265,14 @@ function renderGrid() {
 
         const wordNumber = currentMode === 'random' ? index + 1 : startIndex + index + 1;
         const pos = word.type || word.pos || word.category || word.partOfSpeech || '';
+        const isSaved = savedWords.includes(word.hanzi);
 
         card.innerHTML = `
             <div class="card-top">
                 <span class="word-number">#${wordNumber}</span>
+                <button class="save-star-btn ${isSaved ? 'saved' : ''}" title="Хадгалах">
+                    ${isSaved ? '★' : '☆'}
+                </button>
                 ${pos ? `<span class="pos-tag">${pos}</span>` : '<span></span>'}
             </div>
             <div class="hanzi">${word.hanzi}</div>
@@ -223,6 +283,15 @@ function renderGrid() {
             </div>
         `;
 
+        // Star button click listener (e.stopPropagation prevents the card from flipping when clicking the star)
+        const starBtn = card.querySelector('.save-star-btn');
+        starBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (navigator.vibrate) navigator.vibrate(10);
+            toggleSaveWord(word.hanzi);
+        });
+
+        // Card flip listener
         card.addEventListener('click', () => {
             if (navigator.vibrate) navigator.vibrate(10);
             card.classList.toggle('revealed');
@@ -232,7 +301,7 @@ function renderGrid() {
     });
 }
 
-// 7. Hide / Show All Translations Toggle
+// 8. Hide / Show Translations Toggle
 toggleTranslationsBtn.addEventListener('click', () => {
     const cards = document.querySelectorAll('.card');
     const hasRevealedCards = Array.from(cards).some(card => card.classList.contains('revealed'));
@@ -244,7 +313,7 @@ toggleTranslationsBtn.addEventListener('click', () => {
     } else {
         cards.forEach(card => card.classList.add('revealed'));
         allRevealed = true;
-        toggleTranslationsBtn.textContent = '🫣 Нуух';
+        toggleTranslationsBtn.textContent = '🙈 Нуух';
     }
 });
 
@@ -253,7 +322,7 @@ function resetToggleState() {
     toggleTranslationsBtn.textContent = '👁️ Ил гаргах';
 }
 
-// 8. Navigation Handlers
+// 9. Navigation Handlers
 function changePage(newPage) {
     currentPage = parseInt(newPage, 10);
     resetToggleState();
