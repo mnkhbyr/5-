@@ -335,7 +335,7 @@ toggleTranslationsBtn.addEventListener('click', () => {
     } else {
         cards.forEach(card => card.classList.add('revealed'));
         allRevealed = true;
-        toggleTranslationsBtn.textContent = '🙈 Нуух';
+        toggleTranslationsBtn.textContent = '🫣 Нуух';
     }
 });
 
