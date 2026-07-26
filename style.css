@@ -433,3 +433,50 @@ body {
         font-size: 0.85rem;
     }
 }
+/* Floating Undo Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--text-primary);
+    color: var(--card-bg);
+    padding: 12px 20px; /* Slightly increased toast padding */
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 20px);
+}
+
+/* Larger Undo / Return Button */
+.toast-undo-btn {
+    background: #f59e0b;
+    color: #1a1a1a;
+    border: none;
+    padding: 8px 18px; /* Increased top/bottom and side padding */
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.95rem; /* Increased font size */
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.1s ease, opacity 0.15s ease;
+}
+
+.toast-undo-btn:hover {
+    opacity: 0.9;
+}
+
+.toast-undo-btn:active {
+    transform: scale(0.95);
+}
