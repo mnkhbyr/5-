@@ -46,7 +46,7 @@
     "pinyin": "ānwèi",
     "pos": "动/形容词",
     "english": "to comfort; comforting",
-    "mongolian": "тайвшруулах"
+    "mongolian": "тайтгаруулах, тайвшруулах"
   },
   {
     "hanzi": "安装",
@@ -81,7 +81,7 @@
     "pinyin": "bái",
     "pos": "形/副词",
     "english": "white; in vain",
-    "mongolian": "цагаан; дэмий"
+    "mongolian": "цагаан; дэмий, хий хоосон"
   },
   {
     "hanzi": "半夜",
@@ -109,14 +109,14 @@
     "pinyin": "bāohán",
     "pos": "动词",
     "english": "to contain",
-    "mongolian": "агуулах"
+    "mongolian": "агуулах, багтаах"
   },
   {
     "hanzi": "包括",
     "pinyin": "bāokuò",
     "pos": "动词",
     "english": "to include",
-    "mongolian": "багтаах"
+    "mongolian": "хамруулах, багтаах"
   },
   {
     "hanzi": "包装",
@@ -165,7 +165,7 @@
     "pinyin": "bǎochí",
     "pos": "动词",
     "english": "to keep, maintain",
-    "mongolian": "хадгалах, барих"
+    "mongolian": "хадгалах, энэ хэвээр"
   },
   {
     "hanzi": "保存",
@@ -179,7 +179,7 @@
     "pinyin": "bǎoguì",
     "pos": "形容词",
     "english": "precious, valuable",
-    "mongolian": "үнэтэй, эрхэм"
+    "mongolian": "ховор, нандин"
   },
   {
     "hanzi": "保留",
@@ -193,14 +193,14 @@
     "pinyin": "bǎoxiǎn",
     "pos": "名/形容词",
     "english": "insurance; safe",
-    "mongolian": "даатгал; аюулгүй"
+    "mongolian": "даатгал; хамгаалах, аюулгүй"
   },
   {
     "hanzi": "保质期",
     "pinyin": "bǎozhìqī",
     "pos": "名词",
     "english": "shelf life, expiration date",
-    "mongolian": "хадгалах хугацаа"
+    "mongolian": "хадгалах/чанарын хугацаа"
   },
   {
     "hanzi": "报到",
@@ -221,7 +221,7 @@
     "pinyin": "bàogào",
     "pos": "动/名词",
     "english": "to report; report",
-    "mongolian": "тайлагнах; тайлан"
+    "mongolian": "тайлагнах; тайлан, илтгэх"
   },
   {
     "hanzi": "报警",
@@ -249,14 +249,14 @@
     "pinyin": "bèi",
     "pos": "名/动/形容词",
     "english": "back; to carry on back; remote",
-    "mongolian": "нуруу; үүрэх"
+    "mongolian": "нуруу; цээжлэх, үүрэх"
   },
   {
     "hanzi": "背后",
     "pinyin": "bèihòu",
     "pos": "名词",
     "english": "behind",
-    "mongolian": "ард, цаана"
+    "mongolian": "хойно, ард, цаана"
   },
   {
     "hanzi": "背景",
@@ -284,7 +284,7 @@
     "pinyin": "běndì",
     "pos": "名词",
     "english": "local area",
-    "mongolian": "нутгийн"
+    "mongolian": "тус газар, нутгийн"
   },
   {
     "hanzi": "本领",
@@ -298,7 +298,7 @@
     "pinyin": "běnrén",
     "pos": "代词",
     "english": "oneself, I",
-    "mongolian": "би өөрөө"
+    "mongolian": "би, тухайн хүн"
   },
   {
     "hanzi": "本质",
@@ -368,7 +368,7 @@
     "pinyin": "bìrán",
     "pos": "形/名词",
     "english": "inevitable",
-    "mongolian": "зайлшгүй"
+    "mongolian": "зайлшгүй, гарцаагүй"
   },
   {
     "hanzi": "必需",
@@ -396,7 +396,7 @@
     "pinyin": "biàndòng",
     "pos": "动词",
     "english": "to change, fluctuate",
-    "mongolian": "өөрчлөгдөх"
+    "mongolian": "өөрчлөх"
   },
   {
     "hanzi": "便利",
@@ -452,7 +452,7 @@
     "pinyin": "biǎoqíng",
     "pos": "名词",
     "english": "expression",
-    "mongolian": "царайны хувирал"
+    "mongolian": "царайны хувирал, илэрхийлэх"
   },
   {
     "hanzi": "别",
