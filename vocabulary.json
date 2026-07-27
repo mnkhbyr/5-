@@ -67,7 +67,7 @@
         "pinyin": "ānwèi",
         "pos": "动/形容词",
         "english": "to comfort; comforting",
-        "mongolian": "тайвшруулах"
+        "mongolian": "тайтгаруулах, тайвшруулах"
     },
     {
         "hanzi": "按照",
@@ -88,14 +88,14 @@
         "pinyin": "áoyè",
         "pos": "动词",
         "english": "to stay up late",
-        "mongolian": "шөнөжих"
+        "mongolian": "шөнөжин сэрүүн байх"
     },
     {
         "hanzi": "白",
         "pinyin": "bái",
         "pos": "形/副词",
         "english": "white; in vain",
-        "mongolian": "цагаан; дэмий"
+        "mongolian": "цагаан; дэмий, хий хоосон"
     },
     {
         "hanzi": "摆",
@@ -151,14 +151,14 @@
         "pinyin": "bǎobèi",
         "pos": "名词",
         "english": "treasure, baby",
-        "mongolian": "эрдэнэ, хайрт"
+        "mongolian": "эрдэнэ, хүүхэд"
     },
     {
         "hanzi": "保持",
         "pinyin": "bǎochí",
         "pos": "动词",
         "english": "to keep, maintain",
-        "mongolian": "хадгалах, барих"
+        "mongolian": "хадгалах, энэ хэвээр"
     },
     {
         "hanzi": "保存",
@@ -186,14 +186,14 @@
         "pinyin": "bàogào",
         "pos": "动/名词",
         "english": "to report; report",
-        "mongolian": "тайлагнах; тайлан"
+        "mongolian": "тайлагнах; тайлан, илтгэх"
     },
     {
         "hanzi": "宝贵",
         "pinyin": "bǎoguì",
         "pos": "形容词",
         "english": "precious, valuable",
-        "mongolian": "үнэтэй, эрхэм"
+        "mongolian": "ховор, нандин"
     },
     {
         "hanzi": "包裹",
@@ -207,7 +207,7 @@
         "pinyin": "bāohán",
         "pos": "动词",
         "english": "to contain",
-        "mongolian": "агуулах"
+        "mongolian": "агуулах, багтаах"
     },
     {
         "hanzi": "报警",
@@ -221,7 +221,7 @@
         "pinyin": "bāokuò",
         "pos": "动词",
         "english": "to include",
-        "mongolian": "багтаах"
+        "mongolian": "хамруулах, багтаах"
     },
     {
         "hanzi": "保留",
@@ -235,7 +235,7 @@
         "pinyin": "bǎoxiǎn",
         "pos": "名/形容词",
         "english": "insurance; safe",
-        "mongolian": "даатгал; аюулгүй"
+        "mongolian": "даатгал; хамгаалах, аюулгүй"
     },
     {
         "hanzi": "暴雨",
@@ -263,7 +263,7 @@
         "pinyin": "bǎozhìqī",
         "pos": "名词",
         "english": "shelf life, expiration date",
-        "mongolian": "хадгалах хугацаа"
+        "mongolian": "хадгалах/чанарын хугацаа"
     },
     {
         "hanzi": "包装",
@@ -284,7 +284,7 @@
         "pinyin": "bèi",
         "pos": "名/动/形容词",
         "english": "back; to carry on back; remote",
-        "mongolian": "нуруу; үүрэх"
+        "mongolian": "нуруу; цээжлэх, үүрэх"
     },
     {
         "hanzi": "倍",
@@ -312,7 +312,7 @@
         "pinyin": "bèihòu",
         "pos": "名词",
         "english": "behind",
-        "mongolian": "ард, цаана"
+        "mongolian": "хойно, ард, цаана"
     },
     {
         "hanzi": "背景",
@@ -340,7 +340,7 @@
         "pinyin": "běndì",
         "pos": "名词",
         "english": "local area",
-        "mongolian": "нутгийн"
+        "mongolian": "тус газар, нутгийн"
     },
     {
         "hanzi": "本领",
@@ -354,7 +354,7 @@
         "pinyin": "běnrén",
         "pos": "代词",
         "english": "oneself, I",
-        "mongolian": "би өөрөө"
+        "mongolian": "би, тухайн хүн"
     },
     {
         "hanzi": "本质",
@@ -375,7 +375,7 @@
         "pinyin": "biàn",
         "pos": "副词",
         "english": "then",
-        "mongolian": "тэгвэл"
+        "mongolian": "дариуд нь"
     },
     {
         "hanzi": "遍",
@@ -389,7 +389,7 @@
         "pinyin": "biàndòng",
         "pos": "动词",
         "english": "to change, fluctuate",
-        "mongolian": "өөрчлөгдөх"
+        "mongolian": "өөрчлөх"
     },
     {
         "hanzi": "编辑",
@@ -403,14 +403,14 @@
         "pinyin": "biànlì",
         "pos": "形/动词",
         "english": "convenient; to facilitate",
-        "mongolian": "тохиромжтой"
+        "mongolian": "тохиромжтой, амар, боломжийн"
     },
     {
         "hanzi": "便利店",
         "pinyin": "biànlìdiàn",
         "pos": "名词",
         "english": "convenience store",
-        "mongolian": "хүнсний дэлгүүр"
+        "mongolian": "хүнсний дэлгүүр, CU,GS"
     },
     {
         "hanzi": "辩论",
@@ -459,14 +459,14 @@
         "pinyin": "biǎomíng",
         "pos": "动词",
         "english": "to show, indicate",
-        "mongolian": "харуулах"
+        "mongolian": "үзүүлэх"
     },
     {
         "hanzi": "表情",
         "pinyin": "biǎoqíng",
         "pos": "名词",
         "english": "expression",
-        "mongolian": "царайны хувирал"
+        "mongolian": "царайны хувирал, илэрхийлэх"
     },
     {
         "hanzi": "标题",
@@ -501,7 +501,7 @@
         "pinyin": "bǐcǐ",
         "pos": "代词",
         "english": "each other",
-        "mongolian": "бие бие"
+        "mongolian": "харилцан"
     },
     {
         "hanzi": "别",
@@ -522,7 +522,7 @@
         "pinyin": "bìjìng",
         "pos": "副词",
         "english": "after all",
-        "mongolian": "гэсэн ч гэсэн"
+        "mongolian": "эцсийн эцэст"
     },
     {
         "hanzi": "比例",
@@ -550,7 +550,7 @@
         "pinyin": "bǐng",
         "pos": "名词",
         "english": "cake, biscuit",
-        "mongolian": "бинд, жигнэмэг"
+        "mongolian": "бин, жигнэмэг"
     },
     {
         "hanzi": "丙",
@@ -578,7 +578,7 @@
         "pinyin": "bìrán",
         "pos": "形/名词",
         "english": "inevitable",
-        "mongolian": "зайлшгүй"
+        "mongolian": "зайлшгүй, гарцаагүй"
     },
     {
         "hanzi": "必需",
@@ -613,7 +613,7 @@
         "pinyin": "bōdǎ",
         "pos": "动词",
         "english": "to dial",
-        "mongolian": "дугаар авах"
+        "mongolian": "залгах"
     },
     {
         "hanzi": "玻璃",
@@ -662,7 +662,7 @@
         "pinyin": "bǔchōng",
         "pos": "动词",
         "english": "to supplement",
-        "mongolian": "нэмж баяжуулах"
+        "mongolian": "нөхөх"
     },
     {
         "hanzi": "不但",
@@ -683,7 +683,7 @@
         "pinyin": "bùdéliǎo",
         "pos": "形容词",
         "english": "terrible, serious",
-        "mongolian": "аймшигтай"
+        "mongolian": "балрах"
     },
     {
         "hanzi": "不断",
@@ -697,7 +697,7 @@
         "pinyin": "bùfú",
         "pos": "动词",
         "english": "not in accordance with",
-        "mongolian": "тохирохгүй"
+        "mongolian": "нийцэхгүй, тохирохгүй"
     },
     {
         "hanzi": "不过",
@@ -753,7 +753,7 @@
         "pinyin": "bùrán",
         "pos": "连词",
         "english": "otherwise",
-        "mongolian": "эс тэгвэл"
+        "mongolian": "эс тэгвэл, үгүй бол"
     },
     {
         "hanzi": "不如",
@@ -767,21 +767,21 @@
         "pinyin": "búxìng",
         "pos": "形/名词",
         "english": "unfortunate; misfortune",
-        "mongolian": "золгүй; зовлон"
+        "mongolian": "золгүй; азгүй"
     },
     {
         "hanzi": "步行",
         "pinyin": "bùxíng",
         "pos": "动词",
         "english": "to walk",
-        "mongolian": "явган явах"
+        "mongolian": "алхах"
     },
     {
         "hanzi": "不要紧",
         "pinyin": "búyàojǐn",
         "pos": "形容词",
         "english": "not serious",
-        "mongolian": "хамаагүй"
+        "mongolian": "хамаагүй, -ч яах вэ"
     },
     {
         "hanzi": "步骤",
@@ -795,14 +795,14 @@
         "pinyin": "bùzú",
         "pos": "动/名词",
         "english": "insufficient; shortage",
-        "mongolian": "хангалтгүй; дутагдал"
+        "mongolian": "хүрэлцэхгүй, хангалтгүй"
     },
     {
         "hanzi": "才",
         "pinyin": "cái",
         "pos": "名词",
         "english": "talent, ability",
-        "mongolian": "авьяас"
+        "mongolian": "чадвар, авьяас"
     },
     {
         "hanzi": "踩",
@@ -830,7 +830,7 @@
         "pinyin": "cǎifǎng",
         "pos": "动词",
         "english": "to interview",
-        "mongolian": "ярилцлага хийх"
+        "mongolian": "ярилцлага авах"
     },
     {
         "hanzi": "彩虹",
@@ -851,7 +851,7 @@
         "pinyin": "cǎiqǔ",
         "pos": "动词",
         "english": "to adopt, use",
-        "mongolian": "авах (арга хэмжээ)"
+        "mongolian": "ашиглах, авах (арга хэмжээ)"
     },
     {
         "hanzi": "彩色",
